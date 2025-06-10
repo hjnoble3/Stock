@@ -1,24 +1,22 @@
 import asyncio
+
 import nest_asyncio
 import numpy as np
 import pandas as pd
-from scipy.stats import norm
 from chain import getFilteredOptionData
-from session_login import session_login
+from OptionStrategies.broken_wing_butterflys import create_broken_wing_butterflys
+from OptionStrategies.calendar_spreads import create_calendar_spreads
+from OptionStrategies.diagonal_spreads import create_diagonal_spreads
+from OptionStrategies.iron_condors import create_iron_condors
 
 # Import strategy creation functions from the new subfolder
-from Scripts.OptionStrategies.spreads import create_spreads
-from Scripts.OptionStrategies.strangles import create_strangles
-from Scripts.OptionStrategies.iron_condors import create_iron_condors
-from Scripts.OptionStrategies.broken_wing_butterflys import create_broken_wing_butterflys
-from Scripts.OptionStrategies.calendar_spreads import create_calendar_spreads
-from Scripts.OptionStrategies.diagonal_spreads import create_diagonal_spreads
-from Scripts.shared_tasty_utils import (
-    calculate_probability_of_profit,
-    expected_tail_value,
+from OptionStrategies.spreads import create_spreads
+from OptionStrategies.strangles import create_strangles
+from session_login import session_login
+from shared_tasty_utils import (
     calculate_cvar,
+    calculate_probability_of_profit,
 )
-
 
 # Apply nested asyncio for compatibility
 nest_asyncio.apply()
@@ -164,7 +162,6 @@ async def process_option_strategies():
     broken_wing_butterflys_list = create_broken_wing_butterflys(grouped_expirations, current_price)
     calendar_spreads_list = create_calendar_spreads(df, current_price)  # Calendars use raw df to find different expirations
     diagonal_spreads_list = create_diagonal_spreads(df, current_price)  # Diagonals use raw df
-
 
     return positions_df, spreads_list, strangles_list, iron_condors_list, broken_wing_butterflys_list, calendar_spreads_list, diagonal_spreads_list
 
